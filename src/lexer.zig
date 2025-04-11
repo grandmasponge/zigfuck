@@ -58,4 +58,12 @@ pub const Lexer = struct {
             .tokens = tokens,
         };
     }
+
+    pub fn getTokens(self: *Lexer) std.ArrayList(Tokens) {
+        return self.tokens;
+    }
+
+    pub fn deinit(self: *Lexer) void {
+        self.tokens.deinit();
+    }
 };

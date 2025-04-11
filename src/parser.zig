@@ -15,12 +15,21 @@ pub const Parser = struct {
     allocator: std.mem.Allocator,
     index: usize = 0,
 
-    pub fn init(tokens: std.ArrayList(lexer.Tokens), allocator: std.mem.Allocator) Parser {
+    pub fn init(tokens: std.ArrayList(lexer.Tokens), allocator: std.mem.Allocator) !Parser {
         return Parser{
-            .tokens = tokens,
+            .tokens = try tokens.clone(),
             .actions = std.ArrayList(Action).init(allocator),
             .allocator = allocator,
         };
+    }
+
+    pub fn deinit(self: *Parser) void {
+        self.tokens.deinit();
+        self.actions.deinit();
+    }
+
+    pub fn getActions(self: *Parser) std.ArrayList(Action) {
+        return self.actions;
     }
 
     fn current(self: *Parser) lexer.Tokens {

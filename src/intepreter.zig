@@ -3,12 +3,14 @@ const parser = @import("./parser.zig");
 
 const RuntimeError = error{ OutofMemory, InputError, OutofBounds, UnexpectedAction };
 
-pub fn interpret(program: std.ArrayList(parser.Action)) RuntimeError!void {
+pub fn interpret(program: std.ArrayList(parser.Action)) RuntimeError![]u8 {
     var index: u32 = 0;
     var tape = std.mem.zeroes([1000]u8);
     for (program.items) |actions| {
         try loop(actions, &index, &tape);
     }
+
+    return tape[0..];
 }
 
 pub fn loop(action: parser.Action, index: *u32, tape: *[1000]u8) RuntimeError!void {
